@@ -4,8 +4,19 @@ import express from 'express';
 import { fileURLToPath } from 'node:url';
 import { dirname, join, resolve } from 'node:path';
 import bootstrap from './src/main.server';
+import passport from 'passport';
+import { Strategy } from 'passport-oauth2';
+import { environment } from './environment.prod';
 
-// The Express app is exported so that it can be used by serverless Functions.
+interface PipedriveStrategyCallback {
+  (
+    err: any,
+    accessToken: string | null,
+    refreshToken: string | null,
+    profile: any
+  ): void;
+}
+
 export function app(): express.Express {
   const server = express();
   const serverDistFolder = dirname(fileURLToPath(import.meta.url));
@@ -17,15 +28,70 @@ export function app(): express.Express {
   server.set('view engine', 'html');
   server.set('views', browserDistFolder);
 
-  // Example Express Rest API endpoints
-  // server.get('/api/**', (req, res) => { });
-  // Serve static files from /browser
-  server.get('**', express.static(browserDistFolder, {
-    maxAge: '1y',
-    index: 'index.html',
-  }));
+  server.get('/auth/pipedrive/callback', (req, res, next) => {
+    passport.authenticate(
+      'pipedrive',
+      { session: false },
+      (
+        err: any,
+        accessToken: string | null,
+        refreshToken: string | null,
+        profile: any
+      ) => {
+        if (err) {
+          console.error('Authentication error:', err);
+          return res.redirect('/auth-error');
+        }
 
-  // All regular routes use the Angular engine
+        if (!accessToken || !refreshToken) {
+          return res.redirect('/auth-error');
+        }
+
+        // To enhance security it's better to store them in secure cookies or send via headers
+        return res.send(`
+        <script>
+           const accessToken = '${accessToken}';
+           const refreshToken = '${refreshToken}';
+           localStorage.setItem('access_token', accessToken);
+           localStorage.setItem('refresh_token', refreshToken);
+           window.location.href = '/'; 
+        </script>
+      `);
+      }
+    )(req, res, next);
+  });
+
+  passport.use(
+    'pipedrive',
+    new Strategy(
+      {
+        authorizationURL: 'https://oauth.pipedrive.com/oauth/authorize',
+        tokenURL: 'https://oauth.pipedrive.com/oauth/token',
+        clientID: environment.clientID,
+        clientSecret: environment.clientSecret,
+        callbackURL: environment.callbackURL,
+      },
+      async (
+        accessToken: string,
+        refreshToken: string,
+        profile: any,
+        done: PipedriveStrategyCallback
+      ) => {
+        done(null, accessToken, refreshToken, profile);
+      }
+    )
+  );
+
+  server.get('/auth/pipedrive', passport.authenticate('pipedrive'));
+
+  server.get(
+    '**',
+    express.static(browserDistFolder, {
+      maxAge: '1y',
+      index: 'index.html',
+    })
+  );
+
   server.get('**', (req, res, next) => {
     const { protocol, originalUrl, baseUrl, headers } = req;
 
@@ -47,7 +113,6 @@ export function app(): express.Express {
 function run(): void {
   const port = process.env['PORT'] || 4000;
 
-  // Start up the Node server
   const server = app();
   server.listen(port, () => {
     console.log(`Node Express server listening on http://localhost:${port}`);
