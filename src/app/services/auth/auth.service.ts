@@ -38,7 +38,7 @@ export class AuthService {
       localStorage.setItem('refresh_token', refreshToken);
       this.accessToken = accessToken;
       this.refreshToken = refreshToken;
-      this.routerService.navigate(['/']);
+      this.routerService.navigate(['/'], { onSameUrlNavigation: 'reload' });
 
       window.removeEventListener('message', this.messageListener);
     }
