@@ -96,7 +96,8 @@ export function app(): express.Express {
            const refreshToken = '${refreshToken}';
            localStorage.setItem('access_token', accessToken);
            localStorage.setItem('refresh_token', refreshToken);
-           window.location.href = '/'; 
+           window.opener.postMessage({ token: '${accessToken}' }, '*');
+           window.close();
         </script>
       `);
       }
