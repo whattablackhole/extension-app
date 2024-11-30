@@ -80,6 +80,56 @@
       </p-card>
     </div>
     <div class="col-6">
+      <p-card header="Job details">
+        <ng-template pTemplate="header"> </ng-template>
+
+        <div class="p-field p-fluid">
+          <p-dropdown
+            [options]="jobs"
+            id="jobType"
+            formControlName="jobType"
+            optionLabel="label"
+            placeholder="Select job type"
+            [pTooltip]="
+              !!(form.get('jobType')?.valid || !form.get('jobType')?.touched)
+                ? undefined
+                : 'Select a valid job type'
+            "
+            tooltipEvent="focus"
+            tooltipPosition="bottom"
+          />
+        </div>
+        <div class="p-field p-fluid">
+          <p-dropdown
+            id="jobSource"
+            [options]="jobSources"
+            formControlName="jobSource"
+            optionLabel="label"
+            placeholder="Select company"
+            [pTooltip]="
+              !!(
+                form.get('jobSource')?.valid || !form.get('jobSource')?.touched
+              )
+                ? undefined
+                : 'Select a valid company'
+            "
+            tooltipEvent="focus"
+            tooltipPosition="bottom"
+          />
+        </div>
+        <div class="p-field p-fluid">
+          <textarea
+            placeholder="Job description"
+            rows="5"
+            cols="30"
+            pInputTextarea
+            formControlName="jobDescription"
+          >
+          </textarea>
+        </div>
+      </p-card>
+    </div>
+    <div class="col-6">
       <p-card header="Service location">
         <ng-template pTemplate="header"> </ng-template>
         <div class="p-field p-fluid">
@@ -99,7 +149,7 @@
         </div>
         <div class="p-field p-fluid">
           <input
-          id="city"
+            id="city"
             pInputText
             placeholder="City"
             formControlName="city"
@@ -114,8 +164,7 @@
         </div>
         <div class="p-field p-fluid">
           <input
-          id="state"
-
+            id="state"
             pInputText
             placeholder="State"
             formControlName="state"
@@ -154,10 +203,7 @@
               placeholder="Select an area"
               formControlName="jobArea"
               [pTooltip]="
-                !!(
-                  form.get('jobArea')?.valid ||
-                  !form.get('jobArea')?.touched
-                )
+                !!(form.get('jobArea')?.valid || !form.get('jobArea')?.touched)
                   ? undefined
                   : 'Select a valid area'
               "
@@ -165,60 +211,6 @@
               tooltipPosition="top"
             />
           </div>
-        </div>
-      </p-card>
-    </div>
-    <div class="col-6">
-      <p-card header="Job type">
-        <ng-template pTemplate="header"> </ng-template>
-
-        <div class="p-field p-fluid">
-          <p-dropdown
-            [options]="jobs"
-            id="jobType"
-            formControlName="jobType"
-            optionLabel="label"
-            placeholder="Select job type"
-            [pTooltip]="
-              !!(
-                form.get('jobType')?.valid ||
-                !form.get('jobType')?.touched
-              )
-                ? undefined
-                : 'Select a valid job type'
-            "
-            tooltipEvent="focus"
-            tooltipPosition="bottom"
-          />
-        </div>
-        <div class="p-field p-fluid">
-          <p-dropdown
-            id="jobSource"
-            [options]="jobSources"
-            formControlName="jobSource"
-            optionLabel="label"
-            placeholder="Select company"
-            [pTooltip]="
-              !!(
-                form.get('jobSource')?.valid ||
-                !form.get('jobSource')?.touched
-              )
-                ? undefined
-                : 'Select a valid company'
-            "
-            tooltipEvent="focus"
-            tooltipPosition="bottom"
-          />
-        </div>
-        <div class="p-field p-fluid">
-          <textarea
-            placeholder="Job description"
-            rows="5"
-            cols="30"
-            pInputTextarea
-            formControlName="jobDescription"
-          >
-          </textarea>
         </div>
       </p-card>
     </div>
@@ -234,10 +226,7 @@
             [showIcon]="true"
             inputId="icondisplay"
             [pTooltip]="
-              !!(
-                form.get('jobDate')?.valid ||
-                !form.get('jobDate')?.touched
-              )
+              !!(form.get('jobDate')?.valid || !form.get('jobDate')?.touched)
                 ? undefined
                 : 'Select valid date'
             "

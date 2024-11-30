@@ -117,29 +117,42 @@ export class HomeComponent {
       });
     });
   }
-
   private formPayload() {
     const stageId = this.stages.find(
       (stage: { name: string; id: number }) => stage.name === 'Submitted'
-    ).id;
+    )?.id;
+
+    if (!stageId) {
+      return;
+    }
+
     const payload: { [key: string]: any } = {
-      title: `JOB #${Math.random() * 5000}`,
+      title: `JOB #${Date.now()}`,
       stage_id: stageId,
     };
 
     const reversedObject = Object.fromEntries(
       Object.entries(customFields).map(([key, value]) => [value, key])
     );
+
     const formData = this.form.value;
 
     this.fields.forEach((field) => {
       const key = reversedObject[field.name];
 
       if (key) {
-        const value = formData[key];
+        const getAddress = () => {
+          const { address, city, state, postCode } = formData;
+          return [address, city, state, postCode].filter(Boolean).join(', ');
+        };
+
+        let value =
+          field.name === customFields.address ? getAddress() : formData[key];
+
         payload[field.key] = value?.label || value;
       }
     });
+
     return payload;
   }
 

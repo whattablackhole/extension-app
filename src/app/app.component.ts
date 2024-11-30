@@ -18,7 +18,6 @@ export class AppComponent {
     private router: Router
   ) {
     const result = this.router.parseUrl(this.router.url);
-    console.log(result);
     const iframeID = result.queryParamMap.get('id');
 
     this.pipeDriveService.initialize(iframeID).then(() => {
