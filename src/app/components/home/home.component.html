@@ -1,83 +1,317 @@
-<!-- <mat-grid-list cols="2" rowHeight="2:1">
-  <mat-grid-tile>
-    <mat-form-field>
-      <mat-label>Input</mat-label>
-      <input matInput />
-    </mat-form-field>
-    <mat-form-field>
-      <mat-label>Select</mat-label>
-      <mat-select>
-        <mat-option value="one">First option</mat-option>
-        <mat-option value="two">Second option</mat-option>
-      </mat-select>
-    </mat-form-field>
-    <mat-form-field>
-      <mat-label>Textarea</mat-label>
-      <textarea matInput></textarea>
-    </mat-form-field>
-  </mat-grid-tile>
-  <mat-grid-tile
-    ><mat-form-field>
-      <mat-label>Input</mat-label>
-      <input matInput />
-    </mat-form-field>
-    <mat-form-field>
-      <mat-label>Select</mat-label>
-      <mat-select>
-        <mat-option value="one">First option</mat-option>
-        <mat-option value="two">Second option</mat-option>
-      </mat-select>
-    </mat-form-field>
-    <mat-form-field>
-      <mat-label>Textarea</mat-label>
-      <textarea matInput></textarea></mat-form-field
-  ></mat-grid-tile>
-  <mat-grid-tile
-    ><mat-form-field>
-      <mat-label>Input</mat-label>
-      <input matInput />
-    </mat-form-field>
-    <mat-form-field>
-      <mat-label>Select</mat-label>
-      <mat-select>
-        <mat-option value="one">First option</mat-option>
-        <mat-option value="two">Second option</mat-option>
-      </mat-select>
-    </mat-form-field>
-    <mat-form-field>
-      <mat-label>Textarea</mat-label>
-      <textarea matInput></textarea></mat-form-field
-  ></mat-grid-tile>
-  <mat-grid-tile
-    ><mat-form-field>
-      <mat-label>Input</mat-label>
-      <input matInput />
-    </mat-form-field>
-    <mat-form-field>
-      <mat-label>Select</mat-label>
-      <mat-select>
-        <mat-option value="one">First option</mat-option>
-        <mat-option value="two">Second option</mat-option>
-      </mat-select>
-    </mat-form-field>
-    <mat-form-field>
-      <mat-label>Textarea</mat-label>
-      <textarea matInput></textarea></mat-form-field
-  ></mat-grid-tile>
-</mat-grid-list> -->
-<mat-form-field>
-    <mat-label>Input</mat-label>
-    <input matInput>
-  </mat-form-field>
-  <mat-form-field>
-    <mat-label>Select</mat-label>
-    <mat-select>
-      <mat-option value="one">First option</mat-option>
-      <mat-option value="two">Second option</mat-option>
-    </mat-select>
-  </mat-form-field>
-  <mat-form-field>
-    <mat-label>Textarea</mat-label>
-    <textarea matInput></textarea>
-  </mat-form-field>
-  
+<form [formGroup]="form" (ngSubmit)="onSubmit()" #formGroupAccessor="ngForm">
+  <div class="grid align-items-stretch">
+    <div class="col-6">
+      <p-card header="Client details">
+        <ng-template pTemplate="header"> </ng-template>
+        <div class="card flex flex-column md:flex-row gap-3">
+          <p-inputGroup>
+            <p-inputGroupAddon>
+              <i class="pi pi-user"></i>
+            </p-inputGroupAddon>
+            <input
+              pInputText
+              id="firstName"
+              placeholder="First name"
+              formControlName="firstName"
+              tooltipEvent="focus"
+              tooltipPosition="bottom"
+              [pTooltip]="
+                !!(
+                  form.get('firstName')?.valid ||
+                  !form.get('firstName')?.touched
+                )
+                  ? undefined
+                  : 'Enter a valid first name'
+              "
+            />
+          </p-inputGroup>
+          <p-inputGroup>
+            <p-inputGroupAddon>$</p-inputGroupAddon>
+            <input
+              pInputText
+              id="lastName"
+              placeholder="Last name"
+              formControlName="lastName"
+              tooltipEvent="focus"
+              tooltipPosition="bottom"
+              [pTooltip]="
+                !!(
+                  form.get('lastName')?.valid || !form.get('lastName')?.touched
+                )
+                  ? undefined
+                  : 'Enter a valid last name'
+              "
+            />
+          </p-inputGroup>
+        </div>
+        <div class="p-field p-fluid">
+          <p-inputMask
+            id="phoneNumber"
+            mask="(999) 999-9999"
+            formControlName="phoneNumber"
+            placeholder="(XXX) XXX-XXXX"
+            [pTooltip]="
+              !!(
+                form.get('phoneNumber')?.valid ||
+                !form.get('phoneNumber')?.touched
+              )
+                ? undefined
+                : 'Enter a valid phone number'
+            "
+            tooltipEvent="focus"
+            tooltipPosition="bottom"
+          ></p-inputMask>
+        </div>
+        <div class="p-field p-fluid">
+          <input
+            id="email"
+            type="email"
+            formControlName="email"
+            pInputText
+            placeholder="Enter your email"
+            [pTooltip]="
+              !!(form.get('email')?.valid || !form.get('email')?.touched)
+                ? undefined
+                : 'Enter a valid email'
+            "
+            tooltipEvent="focus"
+            tooltipPosition="bottom"
+          />
+        </div>
+      </p-card>
+    </div>
+    <div class="col-6">
+      <p-card header="Service location">
+        <ng-template pTemplate="header"> </ng-template>
+        <div class="p-field p-fluid">
+          <input
+            id="address"
+            pInputText
+            placeholder="Address"
+            formControlName="address"
+            [pTooltip]="
+              !!(form.get('address')?.valid || !form.get('address')?.touched)
+                ? undefined
+                : 'Enter a valid address'
+            "
+            tooltipEvent="focus"
+            tooltipPosition="bottom"
+          />
+        </div>
+        <div class="p-field p-fluid">
+          <input
+          id="city"
+            pInputText
+            placeholder="City"
+            formControlName="city"
+            [pTooltip]="
+              !!(form.get('city')?.valid || !form.get('city')?.touched)
+                ? undefined
+                : 'Enter a valid city'
+            "
+            tooltipEvent="focus"
+            tooltipPosition="bottom"
+          />
+        </div>
+        <div class="p-field p-fluid">
+          <input
+          id="state"
+
+            pInputText
+            placeholder="State"
+            formControlName="state"
+            [pTooltip]="
+              !!(form.get('state')?.valid || !form.get('state')?.touched)
+                ? undefined
+                : 'Enter a valid state'
+            "
+            tooltipEvent="focus"
+            tooltipPosition="bottom"
+          />
+        </div>
+        <div class="card flex flex-column md:flex-row gap-3 p-fluid">
+          <div class="p-field flex-grow-1">
+            <input
+              id="postCode"
+              pInputText
+              placeholder=""
+              formControlName="postCode"
+              [pTooltip]="
+                !!(
+                  form.get('postCode')?.valid || !form.get('postCode')?.touched
+                )
+                  ? undefined
+                  : 'Enter a valid post code'
+              "
+              tooltipEvent="focus"
+              tooltipPosition="bottom"
+            />
+          </div>
+          <div class="p-field flex-grow-1">
+            <p-dropdown
+              id="jobArea"
+              [options]="areas"
+              optionLabel="label"
+              placeholder="Select an area"
+              formControlName="jobArea"
+              [pTooltip]="
+                !!(
+                  form.get('jobArea')?.valid ||
+                  !form.get('jobArea')?.touched
+                )
+                  ? undefined
+                  : 'Select a valid area'
+              "
+              tooltipEvent="focus"
+              tooltipPosition="top"
+            />
+          </div>
+        </div>
+      </p-card>
+    </div>
+    <div class="col-6">
+      <p-card header="Job type">
+        <ng-template pTemplate="header"> </ng-template>
+
+        <div class="p-field p-fluid">
+          <p-dropdown
+            [options]="jobs"
+            id="jobType"
+            formControlName="jobType"
+            optionLabel="label"
+            placeholder="Select job type"
+            [pTooltip]="
+              !!(
+                form.get('jobType')?.valid ||
+                !form.get('jobType')?.touched
+              )
+                ? undefined
+                : 'Select a valid job type'
+            "
+            tooltipEvent="focus"
+            tooltipPosition="bottom"
+          />
+        </div>
+        <div class="p-field p-fluid">
+          <p-dropdown
+            id="jobSource"
+            [options]="jobSources"
+            formControlName="jobSource"
+            optionLabel="label"
+            placeholder="Select company"
+            [pTooltip]="
+              !!(
+                form.get('jobSource')?.valid ||
+                !form.get('jobSource')?.touched
+              )
+                ? undefined
+                : 'Select a valid company'
+            "
+            tooltipEvent="focus"
+            tooltipPosition="bottom"
+          />
+        </div>
+        <div class="p-field p-fluid">
+          <textarea
+            placeholder="Job description"
+            rows="5"
+            cols="30"
+            pInputTextarea
+            formControlName="jobDescription"
+          >
+          </textarea>
+        </div>
+      </p-card>
+    </div>
+    <div class="col-6">
+      <p-card header="Scheduled">
+        <ng-template pTemplate="header"> </ng-template>
+        <div class="p-field p-fluid">
+          <p-calendar
+            id="jobDate"
+            formControlName="jobDate"
+            iconDisplay="input"
+            [showIcon]="true"
+            inputId="icondisplay"
+            [pTooltip]="
+              !!(
+                form.get('jobDate')?.valid ||
+                !form.get('jobDate')?.touched
+              )
+                ? undefined
+                : 'Select valid date'
+            "
+            tooltipEvent="focus"
+            tooltipPosition="top"
+          />
+        </div>
+
+        <div class="card flex flex-column md:flex-row gap-3">
+          <div class="p-field flex-grow-1">
+            <p-calendar
+              id="jobStartTime"
+              formControlName="jobStartTime"
+              timeOnly="true"
+              hourFormat="24"
+              showSeconds="false"
+              placeholder="HH:mm"
+              [pTooltip]="
+                !!(
+                  form.get('jobStartTime')?.valid ||
+                  !form.get('jobStartTime')?.touched
+                )
+                  ? undefined
+                  : 'Select start time'
+              "
+              tooltipEvent="focus"
+              tooltipPosition="bottom"
+            ></p-calendar>
+          </div>
+          <div class="p-field flex-grow-1">
+            <p-calendar
+              id="jobEndTime"
+              formControlName="jobEndTime"
+              timeOnly="true"
+              hourFormat="24"
+              showSeconds="false"
+              placeholder="HH:mm"
+              [pTooltip]="
+                !!(
+                  form.get('jobEndTime')?.valid ||
+                  !form.get('jobEndTime')?.touched
+                )
+                  ? undefined
+                  : 'Select end time'
+              "
+              tooltipEvent="focus"
+              tooltipPosition="bottom"
+            ></p-calendar>
+          </div>
+        </div>
+
+        <div class="p-field p-fluid">
+          <p-dropdown
+            id="technician"
+            [options]="technicians"
+            formControlName="technician"
+            optionLabel="label"
+            placeholder="Select technician"
+            [pTooltip]="
+              !!(
+                form.get('technician')?.valid ||
+                !form.get('technician')?.touched
+              )
+                ? undefined
+                : 'Select a technician'
+            "
+            tooltipEvent="focus"
+            tooltipPosition="bottom"
+          />
+        </div>
+      </p-card>
+    </div>
+  </div>
+  <div class="p-field p-col-12">
+    <button pButton type="submit" label="Submit"></button>
+  </div>
+</form>

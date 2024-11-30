@@ -6,7 +6,19 @@ import { dirname, join, resolve } from 'node:path';
 import bootstrap from './src/main.server';
 import passport from 'passport';
 import { Strategy } from 'passport-oauth2';
-import { environment } from './environment.prod';
+import axios from 'axios';
+import bodyParser from 'body-parser';
+import * as dotenv from 'dotenv';
+
+dotenv.config();
+
+const environment = {
+  production: true,
+  clientID: process.env['CLIENT_ID'] || '',
+  clientSecret: process.env['CLIENT_SECRET'] || '',
+  callbackURL: process.env['CALLBACK_URL'] || '',
+};
+
 
 interface PipedriveStrategyCallback {
   (
@@ -24,9 +36,40 @@ export function app(): express.Express {
   const indexHtml = join(serverDistFolder, 'index.server.html');
 
   const commonEngine = new CommonEngine();
+  server.use(bodyParser.json());
 
   server.set('view engine', 'html');
   server.set('views', browserDistFolder);
+
+
+  server.post('/auth/refresh', async (req, res) => {
+    const clientId = environment.clientID;
+    const clientSecret = environment.clientSecret;
+    const credentials = Buffer.from(`${clientId}:${clientSecret}`).toString(
+      'base64'
+    );
+    try {
+      const response = await axios.post(
+        'https://oauth.pipedrive.com/oauth/token',
+        req.body,
+        {
+          headers: {
+            Authorization: `Basic ${credentials}`,
+            'Content-Type': 'application/x-www-form-urlencoded',
+          },
+        }
+      );
+      return res.json(response.data);
+    } catch (err) {
+      if (axios.isAxiosError(err)) {
+        res
+          .status(err.response?.status || 500)
+          .json(err.response?.data || { error: 'Unknown error' });
+      }
+      return res.status(500).json({ error: 'Unknown error' });
+    }
+  });
+
 
   server.get('/auth/pipedrive/callback', (req, res, next) => {
     passport.authenticate(
@@ -47,7 +90,6 @@ export function app(): express.Express {
           return res.redirect('/auth-error');
         }
 
-        // To enhance security it's better to store them in secure cookies or send via headers
         return res.send(`
         <script>
            const accessToken = '${accessToken}';
@@ -115,7 +157,7 @@ function run(): void {
 
   const server = app();
   server.listen(port, () => {
-    console.log(`Node Express server listening on http://localhost:${port}`);
+    console.log(`Node Express server listening on port:${port}`);
   });
 }
 
