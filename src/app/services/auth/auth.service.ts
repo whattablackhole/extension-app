@@ -3,6 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { Observable, throwError, Subject } from 'rxjs';
 import { catchError, tap } from 'rxjs/operators';
 import { environment } from '../../../environments/environment';
+import { Router } from '@angular/router';
 
 @Injectable({
   providedIn: 'root',
@@ -14,7 +15,7 @@ export class AuthService {
   private refreshTokenSubject: Subject<string> = new Subject<string>();
   private readonly baseUrl = environment.baseUrl;
 
-  constructor(private httpService: HttpClient) {}
+  constructor(private httpService: HttpClient, private routerService: Router) {}
 
   getAccessToken(): string | null {
     return this.accessToken;
@@ -37,7 +38,7 @@ export class AuthService {
       localStorage.setItem('refresh_token', refreshToken);
       this.accessToken = accessToken;
       this.refreshToken = refreshToken;
-      window.location.href = `${this.baseUrl}/`;
+      this.routerService.navigate(['/']);
 
       window.removeEventListener('message', this.messageListener);
     }
