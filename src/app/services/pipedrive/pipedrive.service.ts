@@ -7,7 +7,7 @@ import AppExtensionsSDK, { Command, View } from '@pipedrive/app-extensions-sdk';
 export class PipeDriveService {
   sdk: AppExtensionsSDK | null = null;
 
-  async initialize(id?: string) {
+  async initialize(id?: string | null) {
     if (id) {
       this.sdk = await new AppExtensionsSDK({ identifier: id }).initialize({
         size: { height: 700, width: 800 },

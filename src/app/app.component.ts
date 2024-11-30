@@ -1,8 +1,7 @@
 import { Component } from '@angular/core';
-import { ActivatedRoute, RouterOutlet } from '@angular/router';
+import { Router, RouterOutlet } from '@angular/router';
 import { PipeDriveService } from './services/pipedrive/pipedrive.service';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
-import { take } from 'rxjs';
 
 @Component({
   selector: 'app-root',
@@ -16,19 +15,18 @@ export class AppComponent {
 
   constructor(
     private pipeDriveService: PipeDriveService,
-    private route: ActivatedRoute
+    private router: Router
   ) {
-    this.route.queryParams.subscribe((params) => {
-      console.log(params);
-      const iframeID = params['id'];
+    const result = this.router.parseUrl(this.router.url);
+    console.log(result);
+    const iframeID = result.queryParamMap.get('id');
 
-      this.pipeDriveService.initialize(iframeID).then(() => {
-        this.enableApp = true;
-      });
-
-      if (!iframeID) {
-        console.error('No identifier found');
-      }
+    this.pipeDriveService.initialize(iframeID).then(() => {
+      this.enableApp = true;
     });
+
+    if (!iframeID) {
+      console.error('No identifier found');
+    }
   }
 }
