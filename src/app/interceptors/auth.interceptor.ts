@@ -9,11 +9,9 @@ import {
 import { EMPTY, Observable, throwError } from 'rxjs';
 import { catchError, switchMap } from 'rxjs/operators';
 import { AuthService } from '../services/auth/auth.service';
-import { environment } from '../../environments/environment';
+
 @Injectable()
 export class AuthInterceptor implements HttpInterceptor {
-  private readonly baseUrl = environment.baseUrl;
-
   constructor(private authService: AuthService) {}
 
   intercept(
@@ -33,7 +31,7 @@ export class AuthInterceptor implements HttpInterceptor {
               return next.handle(clonedRequest);
             }),
             catchError(() => {
-              window.location.href = `${this.baseUrl}/auth/pipedrive`;
+              this.authService.initOAuthFlow();
               return EMPTY;
             })
           );

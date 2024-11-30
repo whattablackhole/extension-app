@@ -1,37 +1,15 @@
 import { CanActivateFn } from '@angular/router';
-import { environment } from '../environments/environment';
+import { AuthService } from './services/auth/auth.service';
+import { inject } from '@angular/core';
 
-const baseUrl = environment.baseUrl;
-
-
-const messageListener = (event: MessageEvent<any>) => {
-  if (event.origin !== window.location.origin) {
-    return;
-  }
-
-  const { accessToken, refreshToken } = event.data;
-
-  if (accessToken && refreshToken) {
-    localStorage.setItem('access_token', accessToken);
-    localStorage.setItem('refresh_token', refreshToken);
-    
-    window.location.href = `${baseUrl}/`;
-
-    window.removeEventListener('message', messageListener);
-  }
-};
-
-export const authGuard: CanActivateFn = (route, state) => {
+export const authGuard: CanActivateFn = () => {
   const token = localStorage.getItem('access_token');
-  if (!token) {
-    window.open(
-      '/auth/pipedrive',
-      'PipedriveAuth',
-      'width=600,height=700'
-    );
-    window.addEventListener('message', messageListener);
+  const refreshToken = localStorage.getItem('refresh_token');
+
+  if (!token && !refreshToken) {
+    const authService = inject(AuthService);
+    authService.initOAuthFlow();
     return false;
   }
   return true;
 };
-

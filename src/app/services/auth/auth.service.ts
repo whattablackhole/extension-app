@@ -20,6 +20,31 @@ export class AuthService {
     return this.accessToken;
   }
 
+  initOAuthFlow() {
+    window.open('/auth/pipedrive', 'PipedriveAuth', 'width=600,height=700');
+    window.addEventListener('message', this.messageListener);
+  }
+
+  messageListener = (event: MessageEvent<any>) => {
+    if (event.origin !== window.location.origin) {
+      return;
+    }
+
+    const { accessToken, refreshToken } = event.data;
+
+    if (accessToken && refreshToken) {
+      localStorage.setItem('access_token', accessToken);
+      localStorage.setItem('refresh_token', refreshToken);
+      this.accessToken = accessToken;
+      this.refreshToken = refreshToken;
+      window.location.href = `${this.baseUrl}/`;
+
+      window.removeEventListener('message', this.messageListener);
+    }
+
+    // TODO: handle window closed without authorized event;
+  };
+
   refreshAccessToken(): Observable<string> {
     if (this.isRefreshing) {
       return this.refreshTokenSubject.asObservable();

@@ -1,7 +1,8 @@
 import { Component } from '@angular/core';
 import { PipeDriveService } from '../../services/pipedrive/pipedrive.service';
 import { ButtonModule } from 'primeng/button';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute } from '@angular/router';
+import { take } from 'rxjs';
 
 @Component({
   selector: 'app-finished',
@@ -13,17 +14,16 @@ export class FinishedComponent {
   viewId: number | null = null;
 
   constructor(
-    private router: Router,
+    private activatedRoute: ActivatedRoute,
     private pipeDriveService: PipeDriveService
   ) {}
 
   ngOnInit(): void {
-    const navigation = this.router.getCurrentNavigation();
-
-    if (navigation?.extras.state) {
-      this.viewId = navigation.extras.state['id'];
-    }
+    this.activatedRoute.queryParamMap.pipe(take(1)).subscribe((params) => {
+      this.viewId = Number.parseInt(params.get('id')!);
+    });
   }
+
   onViewDeal() {
     if (this.viewId) {
       this.pipeDriveService.closeView(this.viewId);

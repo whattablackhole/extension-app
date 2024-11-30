@@ -148,7 +148,7 @@ export class HomeComponent {
       const payload = this.formPayload();
       this.dataService.createDeal(payload).subscribe((response) => {
         this.router.navigate(['finished'], {
-          state: { id: (response as any).data.id },
+          queryParams: { id: (response as any).data.id },
         });
       });
     } else {

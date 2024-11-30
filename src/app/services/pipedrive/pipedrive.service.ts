@@ -10,7 +10,7 @@ export class PipeDriveService {
 
   async initialize() {
     this.sdk = await new AppExtensionsSDK().initialize({
-      size: { height: 600, width: 800 },
+      size: { height: window.innerHeight, width: 800 },
     });
   }
 

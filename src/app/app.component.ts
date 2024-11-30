@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { ActivatedRoute, RouterOutlet } from '@angular/router';
+import { RouterOutlet } from '@angular/router';
 import { PipeDriveService } from './services/pipedrive/pipedrive.service';
 
 @Component({
@@ -8,12 +8,15 @@ import { PipeDriveService } from './services/pipedrive/pipedrive.service';
   imports: [RouterOutlet],
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss',
-
 })
 export class AppComponent {
-  constructor(private route: ActivatedRoute, private pipeDriveService: PipeDriveService) { }
+  enableApp = true;
 
-  async ngOnInit() {
-    this.pipeDriveService.initialize();
+  constructor(private pipeDriveService: PipeDriveService) {}
+
+  ngOnInit() {
+    this.pipeDriveService.initialize().catch(()=>{
+      this.enableApp = false;
+    });
   }
 }
