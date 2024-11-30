@@ -14,9 +14,9 @@ export class AppComponent {
 
   constructor(private pipeDriveService: PipeDriveService) {}
 
-  ngOnInit() {
-    this.pipeDriveService.initialize().catch(()=>{
-      this.enableApp = false;
+  ngAfterViewInit() {
+    this.pipeDriveService.initialize().catch((err) => {
+      console.error(err);
     });
   }
 }
