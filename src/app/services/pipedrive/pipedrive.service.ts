@@ -7,10 +7,16 @@ import AppExtensionsSDK, { Command, View } from '@pipedrive/app-extensions-sdk';
 export class PipeDriveService {
   sdk: AppExtensionsSDK | null = null;
 
-  async initialize(id: string) {
-    this.sdk = await new AppExtensionsSDK({ identifier: id }).initialize({
-      size: { height: 700, width: 800 },
-    });
+  async initialize(id?: string) {
+    if (id) {
+      this.sdk = await new AppExtensionsSDK({ identifier: id }).initialize({
+        size: { height: 700, width: 800 },
+      });
+    } else {
+      this.sdk = await new AppExtensionsSDK().initialize({
+        size: { height: 700, width: 800 },
+      });
+    }
   }
 
   async closeView(redirectId: number) {

@@ -18,14 +18,15 @@ export class AppComponent {
     private pipeDriveService: PipeDriveService,
     private route: ActivatedRoute
   ) {
-    this.route.queryParams.pipe().subscribe((params) => {
+    this.route.queryParams.subscribe((params) => {
+      console.log(params);
       const iframeID = params['id'];
 
-      if (iframeID) {
-        this.pipeDriveService.initialize(iframeID).then(() => {
-          this.enableApp = true;
-        });
-      } else {
+      this.pipeDriveService.initialize(iframeID).then(() => {
+        this.enableApp = true;
+      });
+
+      if (!iframeID) {
         console.error('No identifier found');
       }
     });
