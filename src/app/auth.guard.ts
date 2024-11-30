@@ -9,9 +9,12 @@ const messageListener = (event: MessageEvent<any>) => {
     return;
   }
 
-  const { token } = event.data;
+  const { accessToken, refreshToken } = event.data;
 
-  if (token) {
+  if (accessToken && refreshToken) {
+    localStorage.setItem('access_token', accessToken);
+    localStorage.setItem('refresh_token', refreshToken);
+    
     window.location.href = `${baseUrl}/`;
 
     window.removeEventListener('message', messageListener);
