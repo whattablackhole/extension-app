@@ -1,22 +1,23 @@
 import { Component } from '@angular/core';
-import { RouterOutlet } from '@angular/router';
+import { ActivatedRoute, RouterOutlet } from '@angular/router';
 import { PipeDriveService } from './services/pipedrive/pipedrive.service';
+import { ProgressSpinnerModule } from 'primeng/progressspinner';
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [RouterOutlet],
+  imports: [RouterOutlet, ProgressSpinnerModule],
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss',
 })
 export class AppComponent {
-  enableApp = true;
+  enableApp = false;
 
-  constructor(private pipeDriveService: PipeDriveService) {}
-
-  ngAfterViewInit() {
-    this.pipeDriveService.initialize().catch((err) => {
-      console.error(err);
+  constructor(private pipeDriveService: PipeDriveService, private route: ActivatedRoute) {
+    this.route.queryParams.subscribe((params) => {
+      this.pipeDriveService.initialize(params['id']).then(() => {
+        this.enableApp = true;
+      });
     });
   }
 }

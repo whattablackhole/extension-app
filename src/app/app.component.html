@@ -1,3 +1,7 @@
 @if (enableApp) {
-    <router-outlet />
+<router-outlet />
+} @else {
+<div class="w-screen h-screen flex align-items-center justify-content-center">
+  <p-progressSpinner ariaLabel="loading" />
+</div>
 }
